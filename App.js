@@ -16,14 +16,13 @@ import MealsNavigator from './navigation/MealsNavigator';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 
-
-
 //[Module 120]: Enable usage of Screens
 enableScreens();
 
 //[Module 108]: Setup usage of fonts throughout the project
 function fetchFonts() {
-  Font.loadAsync({
+  console.log('Fonts Loading...')
+  return Font.loadAsync({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
   });

@@ -19,6 +19,9 @@ ScreenCategory.navigationOptions = {
     headerTitle: 'Meal Category',
 };
 
+
+
+//DEFAULT FUNCTION: ScreenCategory ==============================================================================================
 export default function ScreenCategory(props) {
     //Function to return a Component template that the renderItem property will handle
     //Think of it like a customer ArrayAdapter in Java Android development

@@ -6,6 +6,9 @@ import {
     Button
 } from 'react-native';
 
+
+
+//DEFAULT FUNCTION: ScreenMealDetails ===========================================================================================
 export default function ScreenMealDetails(props) {
     return (
         <View style={styles.screen}>

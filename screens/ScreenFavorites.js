@@ -5,6 +5,9 @@ import {
     Text
 } from 'react-native';
 
+
+
+//DEFAULT FUNCTION: ScreenFavorites =============================================================================================
 export default function ScreenFavorites (props) {
     return (
         <View style={styles.screen}>

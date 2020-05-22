@@ -5,6 +5,9 @@ import {
     Text
 } from 'react-native';
 
+
+
+//DEFAULT FUNCTION: ScreenFilters ===============================================================================================
 export default function ScreenFilters (props) {
     return (
         <View style={styles.screen}>
