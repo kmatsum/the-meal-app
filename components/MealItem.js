@@ -12,6 +12,14 @@ import {
 
 
 
+/* [Module 125]: In this module, we needed to create another card which took Meals and dispalyed them on the screen.
+So in 'ScreenCategoryMeals.js', we had a FlatList to iterate through all the different data Objects (MEALS in this case),
+which then it would create different components. (Think ArrayAdapters and ListViews in Android Developer)
+- TODO: Make the styling and touchable work better on Android as we did for 'GridViewButton.js'
+- We passed many of the Meal information through 'props'
+- We introduced 'ImageBackground', which can be used to display an image in the background of things that we have within
+  the nested views. (Think FrameLayouts from Android Development)
+- Used Image to show a picture of the meal providing the Image URL through 'props'*/
 export default function MealItem(props) {
     return (
         <View style={styles.mealItem}>

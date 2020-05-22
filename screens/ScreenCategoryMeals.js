@@ -50,7 +50,6 @@ export default function ScreenCategoryMeals(props) {
         );
     }
 
-
     //Grab the categoryId:
     const categoryId = props.navigation.getParam('categoryId');
 
