@@ -1,9 +1,5 @@
 //React Imports
 import React from 'react';
-//React Native Imports
-import {
-    View,
-} from 'react-native';
 //Custom Component Imports
 import MealList from '../components/MealList';
 //Data Imports
