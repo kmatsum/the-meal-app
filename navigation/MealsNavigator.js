@@ -7,6 +7,7 @@ import { createDrawerNavigation } from 'react-navigation-drawer';
 import ScreenCategory from '../screens/ScreenCategory';
 import ScreenCategoryMeals from '../screens/ScreenCategoryMeals';
 import ScreenMealDetails from '../screens/ScreenMealDetails';
+import ScreenFavorites from '../screens/ScreenFavorites'
 //Constant Imports
 import Colors from '../constants/Colors';
 
@@ -36,9 +37,24 @@ const MealsNavigator = createStackNavigator(
         headerTintColor: 'white',
         headerStyle: {
             backgroundColor: Colors.primaryColor,
-        }
+        },
     }
 });
 
+/* [Module 129] Bottom Tab Navigator: Creating a Bottom Tab Navigator to either show all Meals or just the Favorites.
+'MealsNavigator' is abled to be used as a screen because 'createStackNavigator()' returns a React Component. So you can
+essentially point your navigator to another navigator. Combining many navigation options will enable us to create complex
+applications. The 'createAppContainer(VALUE)' needed to be updated to 'TabMealsNavigator' since the tab Navigator is our primary
+source of entry for our application.                                                                                    */
+const TabMealsnavigator = createBottomTabNavigator((
+{
+    Meals: {
+        screen: MealsNavigator
+    },
+    Favorites: {
+        screen: ScreenFavorites
+    }
+}));
+
 //Export what the createAppContainter returns, passing the default navigator we will be using.
-export default createAppContainer(MealsNavigator);
+export default createAppContainer(TabMealsnavigator);
