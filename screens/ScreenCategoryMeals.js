@@ -2,13 +2,10 @@
 import React from 'react';
 //React Native Imports
 import {
-    StyleSheet,
     View,
-    Text,
-    FlatList
 } from 'react-native';
 //Custom Component Imports
-import MealItem from '../components/MealItem';
+import MealList from '../components/MealList';
 //Data Imports
 import { CATEGORIES, MEALS } from '../data/dummy-data';
 
@@ -35,31 +32,6 @@ ScreenCategoryMeals.navigationOptions = (navigationData) => {
 
 //DEFAULT FUNCTION: ScreenCategoryMeals =========================================================================================
 export default function ScreenCategoryMeals(props) {
-    //Function to return a Component template that the renderItem property will handle
-    //Think of it like a customer ArrayAdapter in Java Android development
-    function renderMealItem(itemData) {
-        return (
-            <MealItem
-                onSelectMeal={() => { }}
-                title={itemData.item.title}
-                image={itemData.item.imageUrl}
-                duration={itemData.item.duration}
-                complexity={itemData.item.complexity}
-                affordability={itemData.item.affordability}
-                /*[Module 126]: We added the onClick Method for each meal Item to navigate to the meal details screen, as
-                well as pass the 'MEAL OBJECT' so we can use it's information in the next screen.                       */
-                onClick={() => {
-                    props.navigation.navigate({
-                        routeName: 'MealDetails',
-                        params: {
-                            MealObject: itemData.item,
-                        }
-                    });
-                }}
-            />
-        );
-    }
-
     //Grab the categoryId:
     const categoryId = props.navigation.getParam('categoryId');
 
@@ -73,21 +45,7 @@ export default function ScreenCategoryMeals(props) {
 
     //JSX CODE ==========
     return (
-        <View style={styles.screen}>
-            <FlatList
-                style={{ width: '95%', margin: 10 }}
-                data={displayedMeals}
-                keyExtractor={(item, index) => item.id}
-                renderItem={renderMealItem}
-            />
-        </View>
+        <MealList listData={displayedMeals} navigation={props.navigation}/>
     );
 }
 
-const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-});
