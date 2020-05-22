@@ -46,6 +46,16 @@ export default function ScreenCategoryMeals(props) {
                 duration={itemData.item.duration}
                 complexity={itemData.item.complexity}
                 affordability={itemData.item.affordability}
+                /*[Module 126]: We added the onClick Method for each meal Item to navigate to the meal details screen, as
+                well as pass the 'MEAL OBJECT' so we can use it's information in the next screen.                       */
+                onClick={() => {
+                    props.navigation.navigate({
+                        routeName: 'MealDetails',
+                        params: {
+                            MealObject: itemData.item,
+                        }
+                    });
+                }}
             />
         );
     }

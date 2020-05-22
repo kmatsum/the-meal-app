@@ -34,7 +34,8 @@ export default function ScreenCategory(props) {
                     //The props.navigation.navigate NAVIGATES to the assigned routeName, but must be within the Navigation
                     //You can also pass other values with the 'params' TAG, then create KEY VALUE PAIRS, similar to props.
                     props.navigation.navigate({
-                        routeName: 'CategoryMeals', params: {
+                        routeName: 'CategoryMeals',
+                        params: {
                             categoryId: itemData.item.id
                         }
                     });
@@ -43,6 +44,7 @@ export default function ScreenCategory(props) {
         );
     }
 
+    
 
     return (
         <FlatList
