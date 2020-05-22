@@ -6,7 +6,7 @@ import MealList from '../components/MealList';
 import { MEALS } from '../data/dummy-data';
 
 /* [Module 133]: We can set the title of the Stack Navigation Header through providing
-the 'navigationOptions' object which react will pull from.                          */
+the 'navigationOptions' object which react will pull from. */
 ScreenFavorites.navigationOptions = {
     headerTitle: 'Your Favorite Meals',
 };
