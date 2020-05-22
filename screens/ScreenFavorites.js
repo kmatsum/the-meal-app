@@ -15,7 +15,8 @@ ScreenFavorites.navigationOptions = {
     headerTitle: 'Your Favorite Meals',
 };
 
-/* [Module 133]:  */
+/* [Module 133]: Added the 'MealList' custom component that we created to output the meals based on
+the 'listData' prop that was passed into the Component, which will grab all relating meal Objects from our data file. */
 
 //DEFAULT FUNCTION: ScreenFavorites =============================================================================================
 export default function ScreenFavorites(props) {
