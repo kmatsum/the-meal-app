@@ -6,7 +6,7 @@ import { Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createDrawerNavigation } from 'react-navigation-drawer';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 //Expo Imports
 import { Ionicons } from '@expo/vector-icons';
@@ -14,7 +14,8 @@ import { Ionicons } from '@expo/vector-icons';
 import ScreenCategory from '../screens/ScreenCategory';
 import ScreenCategoryMeals from '../screens/ScreenCategoryMeals';
 import ScreenMealDetails from '../screens/ScreenMealDetails';
-import ScreenFavorites from '../screens/ScreenFavorites'
+import ScreenFavorites from '../screens/ScreenFavorites';
+import ScreenFilters from '../screens/ScreenFilters';
 //Constant Imports
 import Colors from '../constants/Colors';
 
@@ -28,9 +29,7 @@ const defaultStackNavigatorOptions = {
     },
 };
 
-
-
-//This will enable stack navigation on all included screens 'TAG: Class Pointer'
+//This will enable stack navigation on all included screens (Syntax: 'TAG: Class Pointer')
 //Returns a NAVIGATION React Component
 const MealsStackNavigator = createStackNavigator(
     { //First argument of createStackNavigator(): A list of Screen Objects and a KEY VALUE PAIR for easier identification
@@ -144,5 +143,25 @@ const TabMealsNavigator = (Platform.OS === 'android'
     )
 );
 
+
+/* [Module 134]: We added a FiltersNavigator for the Filters screen that can be accessed from the DrawerNavigator
+we are creating below, 'MainNavigator'.                                                                          */
+const FiltersNavigator = createStackNavigator(
+    {
+        Filters: ScreenFilters,
+    }
+);
+
+
+/* [Module 134] We created a 'drawerNavigator' called 'MainNavigator', as this will be the main entrance way to all
+the other Navigation methods we have. (ex. 'MainNavigator' => 'TabMealsNavigator' => 'MealsStackNavigator' brings 
+you to all available screens) This is also why we updated 'createAppContainer(ReactComponent)' to 'MainNavigator' */
+const MainNavigator = createDrawerNavigator(
+    {
+        MealsFavs: TabMealsNavigator,
+        Filters: FiltersNavigator,
+    }
+);
+
 //Export what the createAppContainter returns, passing the default navigator we will be using.
-export default createAppContainer(TabMealsNavigator);
+export default createAppContainer(MainNavigator);
