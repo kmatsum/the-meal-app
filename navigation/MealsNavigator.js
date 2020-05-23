@@ -1,7 +1,7 @@
 //React Imports
 import React from 'react';
 //React Native Imports
-import { Platform } from 'react-native';
+import { Platform, Text } from 'react-native';
 //React Navigation Imports
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -18,12 +18,20 @@ import ScreenFavorites from '../screens/ScreenFavorites';
 import ScreenFilters from '../screens/ScreenFilters';
 //Constant Imports
 import Colors from '../constants/Colors';
+import { color } from 'react-native-reanimated';
 
 
 
 /* [Module 133]: Create a defaultStackNavigationOptions object for reuse when making different stack navigators */
 const defaultStackNavigatorOptions = {
+    headerTitle: 'NOT CONFIGURED',
     headerTintColor: 'white',
+    headerTitleStyle: {
+        fontFamily: 'open-sans-bold',
+    },
+    headerBackTitleStyle: {
+        fontFamily: 'open-sans',
+    },
     headerStyle: {
         backgroundColor: Colors.primaryColor,
     },
@@ -89,7 +97,9 @@ const tabScreenConfig = {
                     />
                 );
             },
-            tabBarColor: Colors.primaryColor
+            tabBarColor: Colors.primaryColor,
+            /* [Module 136]: FOR ANDROID: tabBarLabel is the only way to change the font styling of the Text Label, instead of in 'tabBarOptions'. */
+            tabBarLabel: Platform.OS === 'android' ? <Text style={{fontFamily: 'open-sans-bold'}}>Meals</Text> : 'Meals'
         }
     },
     Favorites: {
@@ -104,7 +114,8 @@ const tabScreenConfig = {
                     />
                 );
             },
-            tabBarColor: Colors.accentColor
+            tabBarColor: Colors.accentColor,
+            tabBarLabel: Platform.OS === 'android' ? <Text style={{fontFamily: 'open-sans-bold'}}>Favorites</Text> : 'Favorites'
         }
     }
 }
@@ -124,12 +135,12 @@ const TabMealsNavigator = (Platform.OS === 'android'
         { //Second argument of createMaterialBottomTabNavigator(): Allows you to pass CONFIGURATION to the Navigator
             /* [Module 132]:  for 'MaterialBottomTabNavigator', we dont need to assign 'tabBarOption', we can just treat it as
             any other property                                                                                               */
-            activeColor: 'white',
-            shifting: true,
             //UNUSED: For MaterialBottomTabNavigator, there is the barStyle property to configure the entire bar
             // barStyle: {
             //     backgroundColor: Colors.primaryColor
             // }
+            activeColor: 'white',
+            shifting: true,
         }
     )
     : createBottomTabNavigator(
@@ -137,6 +148,9 @@ const TabMealsNavigator = (Platform.OS === 'android'
         tabScreenConfig,
         { //Second argument of createBottomTabNavigator(): Allows you to pass CONFIGURATION to the Navigator
             tabBarOptions: {
+                labelStyle: {
+                    fontFamily: 'open-sans-bold',
+                },
                 activeTintColor: Colors.accentColor,
             }
         }
@@ -149,17 +163,47 @@ we are creating below, 'MainNavigator'.                                         
 const FiltersNavigator = createStackNavigator(
     {
         Filters: ScreenFilters,
+    },
+    {
+        defaultNavigationOptions: defaultStackNavigatorOptions,
+        /* [Module 135]: One way you can set the label in the drawer is by changing the 'navigationOptions' in
+        the whole navigator itself, when it is linked to the Drawer. You could also do this in the 'createDrawerNavigator()'
+        method. (This App uses the latter process to set the drawerLabel.                                               */
+        // navigationOptions: {
+        //     drawerLabel: 'Filters'
+        // },
     }
 );
 
 
-/* [Module 134] We created a 'drawerNavigator' called 'MainNavigator', as this will be the main entrance way to all
+/* [Module 134]: We created a 'drawerNavigator' called 'MainNavigator', as this will be the main entrance way to all
 the other Navigation methods we have. (ex. 'MainNavigator' => 'TabMealsNavigator' => 'MealsStackNavigator' brings 
 you to all available screens) This is also why we updated 'createAppContainer(ReactComponent)' to 'MainNavigator' */
+/* [Module 135]: We configured the DrawerNavigator by adding navigationOptions to each Navigation Object (ie. 'MealFavs
+or 'Filters') as well as configured the entire drawer component by using the SECOND ARGUMENT in the 'createDrawerNavigator()'
+method like we did for the other navigators. In this case, we passed contentOptions to change colors and text styles.   */
 const MainNavigator = createDrawerNavigator(
     {
-        MealsFavs: TabMealsNavigator,
-        Filters: FiltersNavigator,
+        MealsFavs: {
+            screen: TabMealsNavigator,
+            navigationOptions: {
+                drawerLabel: 'Meals'
+            }
+        },
+        Filters: {
+            screen: FiltersNavigator,
+            navigationOptions: {
+                drawerLabel: 'Filters'
+            }
+        }
+    },
+    {
+        contentOptions: {
+            activeTintColor: Colors.accentColor,
+            labelStyle: {
+                fontFamily: 'open-sans-bold'
+            }
+        }
     }
 );
 
