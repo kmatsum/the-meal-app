@@ -8,7 +8,7 @@ import { StyleSheet, Text } from 'react-native';
 the related children Components which use similar props.                                                     */
 export default function DefaultText(props) {
     return (
-        <Text style={styles.text}>{props.children}</Text>
+        <Text style={{...styles.text, ...props.style}}>{props.children}</Text>
     );
 }
 

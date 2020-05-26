@@ -1,5 +1,5 @@
 //React Imports
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 //React Native Imports
 import {
     StyleSheet,
@@ -10,6 +10,10 @@ import {
     ScrollView,
     Image
 } from 'react-native';
+//React Redux Imports 
+import { useSelector, useDispatch } from 'react-redux';
+//Redux Action Imports
+import { toggleFavorite } from '../redux/actions/meals';
 //React Navigation Header Button Imports
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 //Custom Components
@@ -22,6 +26,16 @@ import DefaultText from '../components/DefaultText';
 This function is called by React Navigation.                                                      */
 ScreenMealDetails.navigationOptions = (navigationData) => {
     const meal = navigationData.navigation.getParam('MealObject');
+    const onToggleFavorite = navigationData.navigation.getParam('onToggleFavorite');
+    /* [Module 150]: In order to determine what STAR ICON the Navigation Header should use for the RIGHT BUTTON, we need to get
+        the FAVORITE STATUS of the meal in question. We passed this information from the main body of the React Functional Component
+        through navigation params. Then, we just have a conditional statement in the 'navigtaionOptions', changing the used icon.
+        
+        HOWEVER, the FIRST LOAD of the screen will not load 'isFavorite' from the React Functional Component Body, as 'useEffect()' is
+        called AFTER the rendering of the screen. To avoid mis-match of the favorite status on the FIRST SCREEN LOAD, we had to pass
+        the initial status of the meal through the navigation data from the 'MealList.js' with the same name as from 'useEffect()' */
+    const isFavorite = navigationData.navigation.getParam('isFavorite');
+
     return {
         headerTitle: meal.title,
         /*[Module 127]: You COULD setup header buttons (instead of using the react-navigation-header-button package we are actually using)
@@ -34,10 +48,8 @@ ScreenMealDetails.navigationOptions = (navigationData) => {
             >
                 <Item
                     title='Favorite'
-                    iconName='ios-star-outline'
-                    onPress={() => {
-                        console.log(meal.title + ' was added to favorites!')
-                    }} />
+                    iconName={isFavorite ? 'ios-star' : 'ios-star-outline'}
+                    onPress={onToggleFavorite} />
             </HeaderButtons>
         ),
     };
@@ -45,9 +57,55 @@ ScreenMealDetails.navigationOptions = (navigationData) => {
 
 
 
+/* [Module 137]: A Custom component was added so we can style the Meal Steps in a little fancier matter */
+const ListItem = (props) => {
+    return (
+        <View style={styles.listItem}>
+            <DefaultText>{props.children}</DefaultText>
+        </View>
+    );
+}
+
+
+
 //DEFAULT FUNCTION: ScreenMealDetails ===========================================================================================
 export default function ScreenMealDetails(props) {
     const selectedMeal = props.navigation.getParam('MealObject');
+
+    /* [Module 149]: Redux Dispatch
+        When the 'useDispatch()' function is called, it will call the reducer from Redux, passing an ACTION_OBJECT as the argument.
+        In this case, 'toggleFavorite(selectedMeal.id)' RETURNS an ACTION_OBJECT with the action 'type' and the associated 'mealId'.
+        Once this is passed, a Reducer processes that action (In this case is our 'mealsReducer()') and the Reducer will return changes
+        to the Redux-Store which houses all the state-management. 
+        
+        Since useDispatch is a React Hook, it can ONLY be called from a Functional React Component, which is why we need to create a
+        function pointer 'dispatch' to pass into the function that we get from 'useCallback()' */
+    const dispatch = useDispatch();
+    const toggleFavoriteHandler = useCallback(() => {
+        console.log('Toggle Favorite for the meal');
+        dispatch(toggleFavorite(selectedMeal.id));
+    }, [selectedMeal]);
+
+    /* [Module 149]: We use the same concept that we learned in [Module 140], we can use the 'useEffect()' React Hook to pass the Function
+        pointer which points to the 'toggleFavoriteHandler()' function. Giving the 'useEffect()' the dependency to 'toggleFavoriteHandler'
+        Since 'toggleFavoriteHandler' is never really changed, this 'useEffect()' call should really only be run once. */
+    useEffect(() => {
+        props.navigation.setParams({ onToggleFavorite: toggleFavoriteHandler });
+    }, [toggleFavoriteHandler]);
+
+    /* [Module 150]: 'useSelector' was used to get if the meal is in the 'favoriteMeals' List.
+        the 'useSelector' function will take a function, which React-Redux will provide the state in the React-Redux Store as an argument,
+        so you can access the state in Redux. The 'some()' function will return true if it finds any matching pair in the array that it is
+        applied to, in this case is 'favoriteMeals'
+        As the favorites icon is in the 'navigationOptions' of this Screen, you will need to pass the status as a 'navigation.param'.
+        Since we can only access the state and status within the functional React Component body, we will need to set the parameter.
+        For this, we use 'useEffect' as we did before.*/
+    const isMealFavorite = useSelector((state) => state.meals.favoriteMeals.some((meal) => meal.id === selectedMeal.id));
+    useEffect(() => {
+        props.navigation.setParams({
+            isFavorite: isMealFavorite
+        });
+    }, [isMealFavorite]);
 
     /* [Module 138]: We needed to display all the information of the selected meal in a good manner. 'ScrollView' was used
     instead of FlatView since we don't expect this list to be too long. 'DefaultText' was used to make the quick details come
@@ -105,14 +163,3 @@ const styles = StyleSheet.create({
         padding: 10,
     }
 });
-
-
-
-/* [Module 137]: A Custom component was added so we can style the Meal Steps in a little fancier matter */
-const ListItem = (props) => {
-    return (
-        <View style={styles.listItem}>
-            <DefaultText>{props.children}</DefaultText>
-        </View>
-    );
-}
